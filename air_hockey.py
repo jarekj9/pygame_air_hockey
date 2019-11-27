@@ -72,11 +72,19 @@ class BALL(pygame.sprite.Sprite):
         if self.rect.x < 0:                     self.xspeed =  abs(self.xspeed)
         if self.rect.y > SCREEN_H-self.height : self.yspeed = -abs(self.yspeed)
         if self.rect.y < 0:                     self.yspeed =  abs(self.yspeed)
-        #set some speed limits when ball slows down:
-        if self.xspeed >  5: self.xspeed-=0.5
-        if self.xspeed < -5: self.xspeed+=0.5
-        if self.yspeed >  5: self.yspeed-=0.5
-        if self.yspeed < -5: self.yspeed+=0.5
+        #set some speed limits and when ball slows down:
+        if self.xspeed >  5: 
+            if self.xspeed >  20: self.xspeed =  20
+            else:                 self.xspeed -= 0.5
+        if self.xspeed < -5:
+            if self.xspeed < -20: self.xspeed = -20
+            else:                 self.xspeed += 0.5
+        if self.yspeed >  5:
+            if self.yspeed >  20: self.yspeed =  20
+            else:                 self.yspeed -= 0.5
+        if self.yspeed < -5:
+            if self.yspeed < -20: self.yspeed = -20     
+            else:                 self.yspeed += 0.5
 
     def pad_bounce(self,pad):
         #hit pad from the top (center)
@@ -86,7 +94,7 @@ class BALL(pygame.sprite.Sprite):
             self.rect.y < pad.rect.y + pad.rect.height):
             #change ball speed depending on pad speed
             self.xspeed += pad.xspeed/2
-            self.yspeed = -self.yspeed + pad.yspeed/2
+            self.yspeed = -self.yspeed + pad.yspeed
             self.rect.y += pad.yspeed #to avoid ball lock inside pad
         #hit pad right corener
         if (self.rect.x < pad.rect.x + pad.width      and
@@ -96,7 +104,7 @@ class BALL(pygame.sprite.Sprite):
 
             if self.xspeed < 0: self.xspeed = -self.xspeed + pad.xspeed/2 #only if ball comes from right side
             else:               self.xspeed += pad.xspeed/2                
-            self.yspeed = -self.yspeed + pad.yspeed/2
+            self.yspeed = -self.yspeed + pad.yspeed
 
         #hit pad left corener
         if (self.rect.x + self.width > pad.rect.x      and
@@ -106,7 +114,7 @@ class BALL(pygame.sprite.Sprite):
 
             if self.xspeed > 0: self.xspeed = -self.xspeed + pad.xspeed/2   #only if ball comes from left side
             else:               self.xspeed += pad.xspeed/2                
-            self.yspeed = -self.yspeed + pad.yspeed/2
+            self.yspeed = -self.yspeed + pad.yspeed
 
     def detect_goal(self,gate,score):
         #detect collision with gate
