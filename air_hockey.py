@@ -87,6 +87,7 @@ class BALL(pygame.sprite.Sprite):
             #change ball speed depending on pad speed
             self.xspeed += pad.xspeed/2
             self.yspeed = -self.yspeed + pad.yspeed/2
+            self.rect.y += pad.yspeed #to avoid ball lock inside pad
         #hit pad right corener
         if (self.rect.x < pad.rect.x + pad.width      and
             self.rect.x > pad.rect.x + pad.width - pad.corner_width and
@@ -196,4 +197,3 @@ while running:
     score2.update()
 
     if play_again: initialize_objects() #reset all except scores
-
